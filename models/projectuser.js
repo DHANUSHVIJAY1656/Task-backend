@@ -3,11 +3,8 @@ const mongoose = require("mongoose");
 const ProjectUserSchema = new mongoose.Schema({
     project_id: { type: mongoose.Schema.Types.ObjectId, ref: "Project", required: true },
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    role_in_project: { 
-        type: String, 
-        enum: ["Employee", "Client"], 
-        required: true 
-    },
+    role_in_project: { type: String, enum: ["Employee", "Client"], required: true },
+    created_by: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, 
     assigned_at: { type: Date, default: Date.now }
 });
 

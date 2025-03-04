@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { models } = require("mongoose");
 
 const registercontroller = async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, createdBy } = req.body;
     
     try {
         let user = await User.findOne({ email });
@@ -13,12 +13,12 @@ const registercontroller = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        user = new User({ name, email, password: hashedPassword, role });
+        user = new User({ name, email, password: hashedPassword, role, createdBy });
         await user.save();
 
         res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
-        console.log(message.error)
+        console.error(error);
         res.status(500).json({ message: "Server error" });
     }
 };
@@ -70,4 +70,28 @@ const updateUserRole = async (req, res) => {
     }
 };
 
-module.exports = {registercontroller ,logincontroller , getAllUsers ,updateUserRole};
+const getUsersByRole = async (req, res) => {
+    try {
+        const { role } = req.params;
+
+        if (!role) {
+            return res.status(400).json({ message: "Role parameter is missing" });
+        }
+
+        const formattedRole = role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+
+        if (!["Client", "Employee", "Manager", "Admin"].includes(formattedRole)) {
+            return res.status(400).json({ message: "Invalid role" });
+        }
+
+        const users = await User.find({ role: formattedRole }).select("-password");
+        res.json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+
+module.exports = {registercontroller ,logincontroller , getAllUsers ,updateUserRole ,getUsersByRole};

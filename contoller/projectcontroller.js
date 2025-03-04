@@ -1,14 +1,14 @@
 const Project = require("../models/Project");
 
-
 const createProject = async (req, res) => {
     const { project_name } = req.body;
-    
+    const created_by = req.user.id; 
+
     try {
         let project = await Project.findOne({ project_name });
         if (project) return res.status(400).json({ message: "Project name already exists" });
 
-        project = new Project({ project_name });
+        project = new Project({ project_name, created_by });
         await project.save();
 
         res.status(201).json({ message: "Project created successfully", project });
@@ -17,16 +17,14 @@ const createProject = async (req, res) => {
     }
 };
 
-
 const getAllProjects = async (req, res) => {
     try {
-        const projects = await Project.find();
+        const projects = await Project.find().populate("created_by", "name email"); 
         res.json(projects);
     } catch (error) {
         res.status(500).json({ message: "Server error" });
     }
 };
-
 
 const updateProject = async (req, res) => {
     const { id } = req.params;
@@ -46,4 +44,4 @@ const updateProject = async (req, res) => {
     }
 };
 
-module.exports ={ createProject, getAllProjects, updateProject };
+module.exports = { createProject, getAllProjects, updateProject };
