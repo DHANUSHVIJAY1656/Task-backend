@@ -73,6 +73,20 @@ const getTaskDetails = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+const getAllTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find()
+      .populate("assigned_to", "name email")
+      .populate("assigned_by", "name email")
+      .populate("project_id", "project_name");
+
+    res.json(tasks);
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
 
 
-module.exports = {createTask , addCommentToTask, getTaskDetails};
+
+module.exports = {createTask , addCommentToTask, getTaskDetails , getAllTasks};

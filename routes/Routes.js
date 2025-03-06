@@ -4,7 +4,7 @@ const { route } = require("../App");
 const { authMiddleware, adminMiddleware } = require("../middlerware/authmiddleware");
 const { createProject, getAllProjects, updateProject } = require("../contoller/projectcontroller");
 const { assignUserToProject, getAllProjectUsers, getProjectUsers } = require("../contoller/projectusercontroller");
-const { createTask, addCommentToTask, getTaskDetails } = require("../contoller/taskController");
+const { createTask, addCommentToTask, getTaskDetails, getAllTasks } = require("../contoller/taskController");
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.get("/users/role/:role" ,authMiddleware,adminMiddleware,getUsersByRole);
 //project
 router.post("/create", authMiddleware , adminMiddleware, createProject);
 router.get("/get", authMiddleware,adminMiddleware,getAllProjects);
-router.put("/put/:projectId", authMiddleware,adminMiddleware, updateProject);
+router.put("/put/:Id", authMiddleware,adminMiddleware, updateProject);
 
 //projectuser
 router.post("/projectuser", authMiddleware, adminMiddleware, assignUserToProject);
@@ -28,5 +28,6 @@ router.get("/project-users/:projectId", authMiddleware, getProjectUsers);
 router.post("/task", authMiddleware, createTask);
 router.post("/tasks/:taskId/comments",authMiddleware, addCommentToTask);
 router.get("/tasks/:taskId",authMiddleware, getTaskDetails);
+router.get("/alltask" , authMiddleware , getAllTasks);
 
 module.exports = router;

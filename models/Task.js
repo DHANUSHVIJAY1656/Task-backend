@@ -4,7 +4,7 @@ const TaskSchema = new mongoose.Schema(
   {
     task_name: { type: String, required: true },
     task_description: { type: String },
-    task_doc: { type: String }, // Can store file URLs
+    task_doc: { type: String }, 
     assigned_to: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     assigned_by: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     deadline: { type: Date, required: true },

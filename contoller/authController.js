@@ -34,7 +34,8 @@ const logincontroller = async (req, res) => {
         if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
-
+        // console.log(token);
+        // console.log(typeof(token));
         res.json( {message: "Login successful", token});
     } catch (error) {
         console.log(error)
