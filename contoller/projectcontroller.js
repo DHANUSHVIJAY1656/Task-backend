@@ -29,11 +29,11 @@ const getAllProjects = async (req, res) => {
 };
 
 const updateProject = async (req, res) => {
-    const { Id } = req.params;
+    const { projectId } = req.params;
     const { project_name, status } = req.body;
 
     try {
-        let project = await Project.findById(Id);
+        let project = await Project.findById(projectId);
         if (!project) return res.status(404).json({ message: "Project not found" });
 
         if (project_name) project.project_name = project_name;

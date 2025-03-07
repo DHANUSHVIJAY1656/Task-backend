@@ -15,9 +15,9 @@ router.put("/update-role",authMiddleware,adminMiddleware, updateUserRole);
 router.get("/users/role/:role" ,authMiddleware,adminMiddleware,getUsersByRole);
 
 //project
-router.post("/create", authMiddleware , adminMiddleware, createProject);
-router.get("/get", authMiddleware,adminMiddleware,getAllProjects);
-router.put("/put/:Id", authMiddleware,adminMiddleware, updateProject);
+router.post("/project", authMiddleware , adminMiddleware, createProject);
+router.get("/projects", authMiddleware,adminMiddleware,getAllProjects);
+router.put("/update/:projectId", authMiddleware,adminMiddleware, updateProject);
 
 //projectuser
 router.post("/projectuser", authMiddleware, adminMiddleware, assignUserToProject);
@@ -25,7 +25,7 @@ router.get("/projectusers", authMiddleware ,getAllProjectUsers);
 router.get("/project-users/:projectId", authMiddleware, getProjectUsers);
 
 //task
-router.post("/task", authMiddleware, createTask);
+router.post("/tasks", authMiddleware, createTask);
 router.post("/tasks/:taskId/comments",authMiddleware, addCommentToTask);
 router.get("/tasks/:taskId",authMiddleware, getTaskDetails);
 router.get("/alltask" , authMiddleware , getAllTasks);

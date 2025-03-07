@@ -5,7 +5,7 @@ const TaskSchema = new mongoose.Schema(
     task_name: { type: String, required: true },
     task_description: { type: String },
     task_doc: { type: String }, 
-    assigned_to: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    assigned_to: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true  },
     assigned_by: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     deadline: { type: Date, required: true },
     project_id: { type: mongoose.Schema.Types.ObjectId, ref: "Project", required: true },

@@ -1,19 +1,44 @@
 const Task = require("../models/Task");
 const User = require("../models/User");
 const Project = require("../models/Project");
- 
+const mongoose = require("mongoose");
 
 const createTask = async (req, res) => {
-  const { task_name, task_description, task_doc, assigned_to, assigned_by, deadline, project_id, priority } = req.body;
-
   try {
-    // Check if assigned user exists
-    const assignedUser = await User.findById(assigned_to);
-    if (!assignedUser) return res.status(404).json({ message: "Assigned user not found" });
+    let {
+      task_name,
+      task_description,
+      task_doc,
+      assigned_to,
+      assigned_by,
+      deadline,
+      project_id,
+      priority,
+    } = req.body;
 
-    // Check if project exists
+    if (!mongoose.Types.ObjectId.isValid(assigned_to)) {
+      return res.status(400).json({ message: "Invalid assigned_to ID" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(assigned_by)) {
+      return res.status(400).json({ message: "Invalid assigned_by ID" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(project_id)) {
+      return res.status(400).json({ message: "Invalid project_id" });
+    }
+
+    assigned_to = new mongoose.Types.ObjectId(assigned_to);
+    assigned_by = new mongoose.Types.ObjectId(assigned_by);
+    project_id = new mongoose.Types.ObjectId(project_id);
+
+    const assignedUser = await User.findById(assigned_to);
+    if (!assignedUser) {
+      return res.status(404).json({ message: "Assigned user not found" });
+    }
+
     const project = await Project.findById(project_id);
-    if (!project) return res.status(404).json({ message: "Project not found" });
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
 
     const task = new Task({
       task_name,
@@ -23,7 +48,7 @@ const createTask = async (req, res) => {
       assigned_by,
       deadline,
       project_id,
-      priority
+      priority,
     });
 
     await task.save();
@@ -34,7 +59,6 @@ const createTask = async (req, res) => {
   }
 };
 
-
 const addCommentToTask = async (req, res) => {
   const { taskId } = req.params;
   const { user_id, comment } = req.body;
@@ -43,7 +67,6 @@ const addCommentToTask = async (req, res) => {
     const task = await Task.findById(taskId);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
-    // Add comment
     task.comments.push({ user_id, comment });
     await task.save();
 
@@ -53,7 +76,6 @@ const addCommentToTask = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
-
 
 const getTaskDetails = async (req, res) => {
   const { taskId } = req.params;
@@ -79,7 +101,6 @@ const getAllTasks = async (req, res) => {
       .populate("assigned_to", "name email")
       .populate("assigned_by", "name email")
       .populate("project_id", "project_name");
-
     res.json(tasks);
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -87,6 +108,4 @@ const getAllTasks = async (req, res) => {
   }
 };
 
-
-
-module.exports = {createTask , addCommentToTask, getTaskDetails , getAllTasks};
+module.exports = { createTask, addCommentToTask, getTaskDetails, getAllTasks };
