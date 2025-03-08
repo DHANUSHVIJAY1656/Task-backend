@@ -95,6 +95,33 @@ const getTaskDetails = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+const GetUserAssignedTasks = async (req, res) => {
+  
+
+  try {
+    const { userId } = req.params;
+
+    
+    if (!userId || userId.length !== 24) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    const tasks = await Task.find({ assigned_to: userId })
+      .populate("assigned_to", "name email")
+      .populate("assigned_by", "name email")
+      .populate("project_id", "project_name")
+      .populate("comments.user_id", "name email");
+
+    if (!tasks.length) return res.status(404).json({ message: "No tasks found for this user" });
+
+    res.json(tasks);
+  } catch (error) {
+    console.error("Error fetching user assigned tasks:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
 const getAllTasks = async (req, res) => {
   try {
     const tasks = await Task.find()
@@ -108,4 +135,4 @@ const getAllTasks = async (req, res) => {
   }
 };
 
-module.exports = { createTask, addCommentToTask, getTaskDetails, getAllTasks };
+module.exports = { createTask, addCommentToTask, getTaskDetails, getAllTasks ,GetUserAssignedTasks };

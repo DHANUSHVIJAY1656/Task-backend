@@ -4,7 +4,7 @@ const { route } = require("../App");
 const { authMiddleware, adminMiddleware } = require("../middlerware/authmiddleware");
 const { createProject, getAllProjects, updateProject } = require("../contoller/projectcontroller");
 const { assignUserToProject, getAllProjectUsers, getProjectUsers } = require("../contoller/projectusercontroller");
-const { createTask, addCommentToTask, getTaskDetails, getAllTasks } = require("../contoller/taskController");
+const { createTask, addCommentToTask, getTaskDetails, getAllTasks,  GetUserAssignedTasks } = require("../contoller/taskController");
 
 const router = express.Router();
 
@@ -29,5 +29,6 @@ router.post("/tasks", authMiddleware, createTask);
 router.post("/tasks/:taskId/comments",authMiddleware, addCommentToTask);
 router.get("/tasks/:taskId",authMiddleware, getTaskDetails);
 router.get("/alltask" , authMiddleware , getAllTasks);
+router.get("/tasks/assigned/:userId" , authMiddleware , GetUserAssignedTasks);
 
 module.exports = router;
